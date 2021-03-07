@@ -1,0 +1,208 @@
+
+
+
+
+
+10.SELECT * FROM sql_store.orders where order_date >='2019-01-01';
+
+11.SELECT * FROM sql_store.customers where birth_date >= '1990-01-01' and points > 1000;
+
+12.SELECT * FROM sql_store.customers where birth_date >= '1990-01-01' or points > 1000;
+
+13.SELECT * FROM sql_store.customers where birth_date >= '1990-01-01' or 
+					   (points > 1000 and state='VA');
+
+--(order is 1.(),2.*/,3.+-)
+
+14.SELECT * FROM sql_store.customers where NOT(birth_date >= '1990-01-01' or points > 1000 )
+   or
+   SELECT * FROM sql_store.customers where birth_date <= '1990-01-01' and points < 1000 
+
+15.SELECT * FROM sql_store.order_items where order_id=6 and (quantity*unit_price)>30;
+
+16.select * from customers where state='VA' or state='GA' or state='FL'
+   or
+   select * from customers where state in ('VA','FL','GA')
+
+17.SELECT * FROM sql_store.products where quantity_in_stock in (49,38,72);
+
+18.select * from customers where points>=1000 and points<=3000;
+   or
+   select * from customers where points between 1000 and 3000;
+
+19.SELECT * FROM sql_store.customers where birth_date between '1990-01-01' and '2000-01-01';
+20.select * from customers where last_name like 'c%'
+
+21.select * from customers where last_name like 'brush%'
+22.select * from customers where last_name like '%b%'
+23.select * from customers where last_name like '%y'
+24.select * from customers where last_name like '_____y'
+25.select * from customers where last_name like 'b____y'
+	%-any number of characters
+	_-single character
+
+26.select * from customers where address like '%trail%'  or address like '%avenue%';
+27.select * from customers where phone like '%9';
+28.select * from customers where phone not like '%9';
+29.select * from customers where last_name like '%field%'
+
+• ^: beginning of a string
+• $: end of a string
+• |: logical OR
+• [abc]: match any single characters
+• [a-d]: any characters from a to d 
+
+30.select * from customers where last_name regexp 'field'
+31.select * from customers where last_name regexp '^field'
+32.select * from customers where last_name regexp 'field$'
+33.select * from customers where last_name regexp 'field|mac'
+34.select * from customers where last_name regexp 'field|mac|rose'
+35.select * from customers where last_name regexp '^field|mac|rose'
+36.select * from customers where last_name regexp 'field$|mac|rose'
+37.select * from customers where last_name regexp 'e'
+38.select * from customers where last_name regexp '[gim]e'   (--ge or ie or me)
+39.select * from customers where last_name regexp 'e[fhsbdk]' ;
+40.select * from customers where last_name regexp '[a-h]e' ;
+41.select * from customers where first_name regexp 'elka|ambur' 
+42.select * from customers where last_name regexp 'ey$|on$'  ;
+43.select * from customers where last_name regexp '^my|se'  ;
+44.select * from customers where last_name regexp 'b[ru]'  ;   or 'br|bu'
+
+45.select * from customers where phone is null
+46.select * from customers where phone is not null
+47.SELECT * FROM sql_store.orders where shipped_date is null;
+
+48.SELECT * FROM customers order by first_name;
+49.SELECT * FROM customers order by first_name desc;
+50.SELECT * FROM customers order by state,first_name 
+51.SELECT * FROM customers order by state desc,first_name 
+52.SELECT * FROM customers order by state desc,first_name desc 
+53.SELECT first_name,last_name FROM customers order by birth_date
+54.SELECT first_name,last_name,10 as points FROM customers order by points,first_name
+55.SELECT * FROM sql_store.order_items where order_id=2 order by quantity*unit_price desc;
+56.SELECT * , quantity*unit_price as total_price FROM sql_store.order_items where order_id=2 order by total_price  desc;
+57.select * from customers limit 3
+58.select * from customers limit 8
+59.select * from customers limit 6,3
+60.select * from customers order by points desc limit 3
+
+
+order of clauses:
+-------------------
+select -> from -> where -> order by -> limit
+
+
+61.SELECT * FROM orders inner join customers on orders.customer_id=customers.customer_id ;
+
+62.SELECT order_id,first_name,last_name FROM orders inner join customers on orders.customer_id=customers.customer_id ;
+
+63.SELECT order_id,customer_id,first_name,last_name FROM orders inner join customers on orders.customer_id=customers.customer_id ;
+  (63 will show error as customer_id cloumn is in both the tables. so we have to specify the table name also like in 64)
+64.SELECT order_id,orders.customer_id,first_name,last_name FROM orders inner join customers on orders.customer_id=customers.customer_id ;
+
+65.SELECT * FROM orders o inner join customers c on o.customer_id=c.customer_id ;
+
+66.select o.order_id,o.product_id,name,quantity,o.unit_price from order_items o join products p on o.product_id=p.product_id order by order_id
+
+67.select * from order_items oi join sql_inventory.products p on oi.product_id=p.product_id
+68.select * from sql_store.order_items oi join sql_inventory.products p on oi.product_id=p.product_id
+   
+    (self join)
+69.use sql_hr;
+   select e.employee_id,e.first_name,m.first_name as manager from employees e join employees m on e.reports_to = m.employee_id
+
+70.(joining three tables)
+	use sql_store;
+
+select o.order_id,
+		o.order_date,
+        c.first_name,
+        c.last_name,
+        os.name as status
+        from orders o 
+join customers c
+	on o.customer_id=c.customer_id
+join order_statuses os
+	on o.status=os.order_status_id
+
+71.use sql_invoicing;
+
+select 
+       p.date,
+       p.invoice_id,
+       p.amount,
+       c.name,
+       pm.name
+from payments p
+join clients c
+	on p.client_id = c.client_id
+join payment_methods pm
+	on p.payment_method = pm.payment_method_id
+
+72.select deptName,count(e.deptid)
+from Departments d
+join Employees e
+on d.deptId=e.deptId
+group by deptName
+
+
+73.select itemName
+from items i
+join orders o
+on i.itemid=o.itemid
+where o.itemid=(select o.itemid from orders where o.orderid=4499 limit 1)
+
+74.select ename from Employees
+where deptid=(select deptid from Employees where eid=108)
+
+75.select  p.product_id,p.name,count(p.product_id)  from products p
+join order_items o
+on p.product_id=o.product_id
+where p.product_id in (1,2,3)
+group by(p.product_id)
+
+76.select p.product_id,p.name, sum(o.quantity)
+from products p
+join order_items o
+on p.product_id=o.product_id
+group by p.product_id
+order by p.product_id
+
+
+____________________________________________________________________________SQL JAVA_______________________________________________________________________________
+
+
+1.	select deptName,count(edeptid )
+	from Departments  
+	inner join Employees 
+	on departments.deptid=employees.edeptId 
+	group by deptName;
+
+
+2.	select distinct Dept_name from Departments,Employees 
+where Dept_ID=Emp_Dept_Id and Dept_name not in 
+(select distinct Dept_name from Departments,Employees where Dept_id=Emp_Dept_Id and Emp_Skill like'Programmer');
+
+
+		OR
+
+select distinct dept_name from departments  
+join employees 
+on dept_id=emp_dept_id
+where dept_id not in
+(select distinct emp_dept_id from employees 
+where emp_skill  like 'Programmer');
+
+3.select distinct dept_name, emp_skill from departments 
+join employees
+on dept_id=emp_dept_id
+order by dept_name desc,emp_skill;
+
+4.select item_name 
+from items
+where item_id not in (select item_id from orders);	
+
+
+
+
+

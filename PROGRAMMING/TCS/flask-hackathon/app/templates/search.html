@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div id="heroCarousel" class="container carousel carousel-fade" data-ride="carousel">
+    <div class="carousel-item active">
+    <div class="carousel-container" style="color:white;">
+        
+        <div class="content-section">
+            <form method="POST" action="">
+            
+                <fieldset class="form-group">
+                    <h1>blood donation is very good</h1>
+                </fieldset>
+                
+            </form>
+        </div>
+        
+
+    </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extra %}
+
+
+<div class="active-pink-3 active-pink-4 mb-4" style="color:aquamarine;text-align: center;" >
+    {{form.bbid.label}}                  
+  </div>
+  <div class="active-pink-3 active-pink-4 mb-4" style="color:aquamarine;text-align: center;" >
+    {{form.bbid}}                  
+  </div>
+
+  <div class="active-pink-3 active-pink-4 mb-4" style="color:aquamarine;text-align: center;" >
+    {{form.bloodgroup.label}}                  
+  </div>
+  <div class="active-pink-3 active-pink-4 mb-4" style="color:aquamarine;text-align: center;" >
+    {{form.bloodgroup}}                  
+  </div>
+<div class="form-group" style="text-align: center;">
+    {{form.submit(class="btn btn-outline-info")}}
+</div>
+
+{%if posts %}
+  {% for post in posts %}
+  <section, style="text-align: center;color: white;">
+    {post}
+  </section>
+  {% endfor %}
+{%endif%}
+
+{%if bgpost %}
+  {%for post in bgpost %}
+    {%for data in post %}
+    <section, style="text-align: center;color: white;">
+      {data}
+    </section>
+    {% endfor %}
+  {%endfor %}
+
+{%endif%}
+
+
+{% endblock extra%}
